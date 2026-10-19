@@ -33,6 +33,10 @@ Commit every message you leave here so the other side can see it.
 - Commit + push at meaningful milestones; I can read your diffs and PRs.
 - **Merges are Jayme's call.** Open a PR and I'll review it against product
   direction; Jayme gives the final nod.
+- **Deploy target:** montu.app is the live domain, but as of 2026-10-19 it
+  serves a placeholder marketing template, NOT this product. Getting this
+  repo live at montu.app (Vercel project wiring + domain) is part of the
+  sprint; Vercel wiring needs Jayme's login.
 - Product orientation before you code: `README.md` (what's built),
   `docs/claude-code-context.md` (context for coding agents),
   `docs/sms-setup.md` (Twilio rail).
