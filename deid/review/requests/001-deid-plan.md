@@ -457,3 +457,29 @@ result. A Spain result is not a Mexico result.
   entities?
 - **Q15.** EDPB Guidelines 02/2026 and CJEU C-413/23 P: who on our side verifies the citations and their reading
   before the client addendum relies on them?
+
+---
+
+## 17. Status after build day 1 (2026-11-13)
+
+Evidence of record for the first held-out run: `eval/reports/run1-seed20261113-afca388.md` (EVAL-SYNTHETIC, 60 calls,
+20 per variant, whisper-small int8 on CPU, policy 0.1.2, no operator lexicon). Seed 20261113 was not used in tuning.
+
+**It fails. Releasable output does not exist yet, and the release gate correctly refuses it.**
+- Missed drops: **2** of 23 excluded calls (es_ES special category: ASR misspelled the term, fixed since in d160a3c
+  without re-running this seed; es_MX minor: not yet diagnosed). Blocker 4 is open.
+- Leak rate: 36 of 37 staged calls kept at least one gold identifier unredacted under the strict criterion. Blocker 1
+  is open.
+- Weakest categories (strict recall, pooled): SPELLED 0.58, EMAIL 0.59, DOB 0.68, NATIONAL_ID 0.79, NAME 0.82.
+- Over-dropping: es_MX 6 of 16 keep-calls dropped as PCI (CLABE digits mis-heard, card word present); en_US 5 of 15
+  dropped by the leak scan.
+- Over-redaction: 73.8% of all audio filled. Cause, identified but not yet fixed: the untranscribed-speech rule uses
+  an absolute -40 dBFS threshold, so background noise at 15-20 dB SNR is filled as "speech". It needs a threshold
+  relative to each channel's noise floor. As it stands the output would have little value to a buyer.
+- Boundary error of detected spans: end shortfall p90 304 ms, p99 1249 ms (n = 387).
+- CPU real-time factor 0.377 (4 cores). No GPU figure exists.
+
+What this changes in §14: the day-3 list is built and tested, but "a first per-category report" is all it delivers
+at quality. A first *releasable* sample needs, at least: the noise-floor fix, number-and-letter handling for
+spelled runs and dictated emails, a stronger ASR or a second ASR pass on the customer channel, and the operator
+lexicon (Q3). None of this is measured yet; run2 (fresh seed, current head) is the next measurement.

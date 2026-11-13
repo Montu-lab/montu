@@ -1,0 +1,626 @@
+{
+ "evidence_class": "EVAL-SYNTHETIC",
+ "binds_to": {
+  "generator_commit": "afca388c269dd486338fa1554752cbb3063f620b",
+  "seed": 20261113,
+  "per_variant": 20,
+  "variants": [
+   "es_ES",
+   "es_MX",
+   "en_US"
+  ],
+  "voices": {
+   "es_ES": [
+    "es/es_ES/davefx/medium/es_ES-davefx-medium.onnx",
+    "es/es_ES/sharvard/medium/es_ES-sharvard-medium.onnx"
+   ],
+   "es_MX": [
+    "es/es_MX/claude/high/es_MX-claude-high.onnx",
+    "es/es_MX/ald/medium/es_MX-ald-medium.onnx"
+   ],
+   "en_US": [
+    "en/en_US/ryan/medium/en_US-ryan-medium.onnx",
+    "en/en_US/lessac/medium/en_US-lessac-medium.onnx"
+   ]
+  },
+  "voice_licences": {
+   "es_ES-davefx-medium": "CC0",
+   "es_ES-sharvard-medium": "CC BY 3.0",
+   "es_MX-claude-high": "Apache-2.0",
+   "es_MX-ald-medium": "Unlicense",
+   "en_US-ryan-medium": "CC BY-NC-SA 4.0 (non-commercial: internal eval only)",
+   "en_US-lessac-medium": "Blizzard 2013 Lessac licence (research: internal eval only)"
+  },
+  "asr_model": "faster-whisper-small",
+  "asr_compute_type": "int8",
+  "asr_device": "cpu",
+  "pipeline_version": "0.1.0",
+  "policy_digest": "443a8299bc1fa0485feff4889bf313f405749320df17f2916972e514261332aa",
+  "operator_lexicon": "absent (brand and agent-name recall measured without one)"
+ },
+ "policy_version": "0.1.2",
+ "model_versions": {
+  "asr": "5ced2f87b2528fc0b564df6029813cea2d0064e34a475beeeffc644908637b6c"
+ },
+ "failing_categories": [
+  "ADDRESS",
+  "BRAND",
+  "DOB",
+  "EMAIL",
+  "NAME",
+  "NATIONAL_ID",
+  "PHONE",
+  "REFERENCE",
+  "SPELLED",
+  "EXCLUSION"
+ ],
+ "missed_drops": 2,
+ "calls": 60,
+ "staged_calls": 37,
+ "leak_rate_staged_calls": 0.972972972972973,
+ "leaky_staged_calls": 36,
+ "per_category": [
+  {
+   "variant": "en_US",
+   "category": "ADDRESS",
+   "n": 9,
+   "strict_recall": 1.0,
+   "ci95": [
+    0.701,
+    1.0
+   ],
+   "audio_recall": 1.0,
+   "transcript_recall": 1.0,
+   "target": 0.95
+  },
+  {
+   "variant": "en_US",
+   "category": "BRAND",
+   "n": 23,
+   "strict_recall": 1.0,
+   "ci95": [
+    0.857,
+    1.0
+   ],
+   "audio_recall": 1.0,
+   "transcript_recall": 1.0,
+   "target": 0.99
+  },
+  {
+   "variant": "en_US",
+   "category": "DOB",
+   "n": 8,
+   "strict_recall": 0.75,
+   "ci95": [
+    0.409,
+    0.929
+   ],
+   "audio_recall": 1.0,
+   "transcript_recall": 0.75,
+   "target": 0.95
+  },
+  {
+   "variant": "en_US",
+   "category": "EMAIL",
+   "n": 4,
+   "strict_recall": 0.75,
+   "ci95": [
+    0.301,
+    0.954
+   ],
+   "audio_recall": 1.0,
+   "transcript_recall": 0.75,
+   "target": 0.98
+  },
+  {
+   "variant": "en_US",
+   "category": "NAME",
+   "n": 32,
+   "strict_recall": 0.875,
+   "ci95": [
+    0.719,
+    0.95
+   ],
+   "audio_recall": 0.875,
+   "transcript_recall": 0.90625,
+   "target": 0.95
+  },
+  {
+   "variant": "en_US",
+   "category": "NATIONAL_ID",
+   "n": 9,
+   "strict_recall": 0.8888888888888888,
+   "ci95": [
+    0.565,
+    0.98
+   ],
+   "audio_recall": 0.8888888888888888,
+   "transcript_recall": 0.8888888888888888,
+   "target": 0.99
+  },
+  {
+   "variant": "en_US",
+   "category": "PHONE",
+   "n": 5,
+   "strict_recall": 1.0,
+   "ci95": [
+    0.566,
+    1.0
+   ],
+   "audio_recall": 1.0,
+   "transcript_recall": 1.0,
+   "target": 0.99
+  },
+  {
+   "variant": "en_US",
+   "category": "REFERENCE",
+   "n": 6,
+   "strict_recall": 0.8333333333333334,
+   "ci95": [
+    0.436,
+    0.97
+   ],
+   "audio_recall": 0.8333333333333334,
+   "transcript_recall": 1.0,
+   "target": 0.98
+  },
+  {
+   "variant": "en_US",
+   "category": "SPELLED",
+   "n": 9,
+   "strict_recall": 0.3333333333333333,
+   "ci95": [
+    0.121,
+    0.646
+   ],
+   "audio_recall": 0.5555555555555556,
+   "transcript_recall": 0.3333333333333333,
+   "target": 0.98
+  },
+  {
+   "variant": "es_ES",
+   "category": "ADDRESS",
+   "n": 10,
+   "strict_recall": 1.0,
+   "ci95": [
+    0.722,
+    1.0
+   ],
+   "audio_recall": 1.0,
+   "transcript_recall": 1.0,
+   "target": 0.95
+  },
+  {
+   "variant": "es_ES",
+   "category": "BRAND",
+   "n": 36,
+   "strict_recall": 0.9722222222222222,
+   "ci95": [
+    0.858,
+    0.995
+   ],
+   "audio_recall": 0.9722222222222222,
+   "transcript_recall": 1.0,
+   "target": 0.99
+  },
+  {
+   "variant": "es_ES",
+   "category": "DOB",
+   "n": 13,
+   "strict_recall": 0.6153846153846154,
+   "ci95": [
+    0.355,
+    0.823
+   ],
+   "audio_recall": 0.6923076923076923,
+   "transcript_recall": 0.8461538461538461,
+   "target": 0.95
+  },
+  {
+   "variant": "es_ES",
+   "category": "EMAIL",
+   "n": 17,
+   "strict_recall": 0.5882352941176471,
+   "ci95": [
+    0.36,
+    0.784
+   ],
+   "audio_recall": 0.6470588235294118,
+   "transcript_recall": 0.5882352941176471,
+   "target": 0.98
+  },
+  {
+   "variant": "es_ES",
+   "category": "NAME",
+   "n": 55,
+   "strict_recall": 0.8727272727272727,
+   "ci95": [
+    0.76,
+    0.937
+   ],
+   "audio_recall": 0.8727272727272727,
+   "transcript_recall": 0.8909090909090909,
+   "target": 0.95
+  },
+  {
+   "variant": "es_ES",
+   "category": "NATIONAL_ID",
+   "n": 15,
+   "strict_recall": 0.7333333333333333,
+   "ci95": [
+    0.48,
+    0.891
+   ],
+   "audio_recall": 0.8666666666666667,
+   "transcript_recall": 0.7333333333333333,
+   "target": 0.99
+  },
+  {
+   "variant": "es_ES",
+   "category": "PHONE",
+   "n": 20,
+   "strict_recall": 1.0,
+   "ci95": [
+    0.839,
+    1.0
+   ],
+   "audio_recall": 1.0,
+   "transcript_recall": 1.0,
+   "target": 0.99
+  },
+  {
+   "variant": "es_ES",
+   "category": "REFERENCE",
+   "n": 9,
+   "strict_recall": 1.0,
+   "ci95": [
+    0.701,
+    1.0
+   ],
+   "audio_recall": 1.0,
+   "transcript_recall": 1.0,
+   "target": 0.98
+  },
+  {
+   "variant": "es_ES",
+   "category": "SPELLED",
+   "n": 12,
+   "strict_recall": 0.75,
+   "ci95": [
+    0.468,
+    0.911
+   ],
+   "audio_recall": 0.75,
+   "transcript_recall": 0.75,
+   "target": 0.98
+  },
+  {
+   "variant": "es_MX",
+   "category": "ACCOUNT",
+   "n": 7,
+   "strict_recall": 1.0,
+   "ci95": [
+    0.646,
+    1.0
+   ],
+   "audio_recall": 1.0,
+   "transcript_recall": 1.0,
+   "target": 0.99
+  },
+  {
+   "variant": "es_MX",
+   "category": "ADDRESS",
+   "n": 6,
+   "strict_recall": 0.5,
+   "ci95": [
+    0.188,
+    0.812
+   ],
+   "audio_recall": 0.8333333333333334,
+   "transcript_recall": 0.5,
+   "target": 0.95
+  },
+  {
+   "variant": "es_MX",
+   "category": "BRAND",
+   "n": 28,
+   "strict_recall": 0.8928571428571429,
+   "ci95": [
+    0.728,
+    0.963
+   ],
+   "audio_recall": 0.9285714285714286,
+   "transcript_recall": 0.8928571428571429,
+   "target": 0.99
+  },
+  {
+   "variant": "es_MX",
+   "category": "DOB",
+   "n": 10,
+   "strict_recall": 0.7,
+   "ci95": [
+    0.397,
+    0.892
+   ],
+   "audio_recall": 0.9,
+   "transcript_recall": 0.7,
+   "target": 0.95
+  },
+  {
+   "variant": "es_MX",
+   "category": "EMAIL",
+   "n": 13,
+   "strict_recall": 0.5384615384615384,
+   "ci95": [
+    0.291,
+    0.768
+   ],
+   "audio_recall": 0.7692307692307693,
+   "transcript_recall": 0.6153846153846154,
+   "target": 0.98
+  },
+  {
+   "variant": "es_MX",
+   "category": "NAME",
+   "n": 37,
+   "strict_recall": 0.7027027027027027,
+   "ci95": [
+    0.542,
+    0.825
+   ],
+   "audio_recall": 0.7837837837837838,
+   "transcript_recall": 0.7297297297297297,
+   "target": 0.95
+  },
+  {
+   "variant": "es_MX",
+   "category": "PHONE",
+   "n": 12,
+   "strict_recall": 0.8333333333333334,
+   "ci95": [
+    0.552,
+    0.953
+   ],
+   "audio_recall": 0.8333333333333334,
+   "transcript_recall": 0.8333333333333334,
+   "target": 0.99
+  },
+  {
+   "variant": "es_MX",
+   "category": "REFERENCE",
+   "n": 4,
+   "strict_recall": 0.75,
+   "ci95": [
+    0.301,
+    0.954
+   ],
+   "audio_recall": 1.0,
+   "transcript_recall": 0.75,
+   "target": 0.98
+  },
+  {
+   "variant": "es_MX",
+   "category": "SPELLED",
+   "n": 10,
+   "strict_recall": 0.6,
+   "ci95": [
+    0.313,
+    0.832
+   ],
+   "audio_recall": 0.7,
+   "transcript_recall": 0.6,
+   "target": 0.98
+  }
+ ],
+ "pooled": {
+  "ACCOUNT": {
+   "n": 7,
+   "strict_recall": 1.0,
+   "ci95": [
+    0.646,
+    1.0
+   ],
+   "target": 0.99
+  },
+  "ADDRESS": {
+   "n": 25,
+   "strict_recall": 0.88,
+   "ci95": [
+    0.7,
+    0.958
+   ],
+   "target": 0.95
+  },
+  "BRAND": {
+   "n": 87,
+   "strict_recall": 0.9540229885057471,
+   "ci95": [
+    0.888,
+    0.982
+   ],
+   "target": 0.99
+  },
+  "DOB": {
+   "n": 31,
+   "strict_recall": 0.6774193548387096,
+   "ci95": [
+    0.501,
+    0.814
+   ],
+   "target": 0.95
+  },
+  "EMAIL": {
+   "n": 34,
+   "strict_recall": 0.5882352941176471,
+   "ci95": [
+    0.422,
+    0.736
+   ],
+   "target": 0.98
+  },
+  "NAME": {
+   "n": 124,
+   "strict_recall": 0.8225806451612904,
+   "ci95": [
+    0.746,
+    0.88
+   ],
+   "target": 0.95
+  },
+  "NATIONAL_ID": {
+   "n": 24,
+   "strict_recall": 0.7916666666666666,
+   "ci95": [
+    0.595,
+    0.908
+   ],
+   "target": 0.99
+  },
+  "PHONE": {
+   "n": 37,
+   "strict_recall": 0.9459459459459459,
+   "ci95": [
+    0.823,
+    0.985
+   ],
+   "target": 0.99
+  },
+  "REFERENCE": {
+   "n": 19,
+   "strict_recall": 0.8947368421052632,
+   "ci95": [
+    0.686,
+    0.971
+   ],
+   "target": 0.98
+  },
+  "SPELLED": {
+   "n": 31,
+   "strict_recall": 0.5806451612903226,
+   "ci95": [
+    0.408,
+    0.736
+   ],
+   "target": 0.98
+  }
+ },
+ "hard_cases_clean_call_rate": {
+  "agent_readback": {
+   "calls": 10,
+   "clean": 1
+  },
+  "brand_in_greeting": {
+   "calls": 37,
+   "clean": 1
+  },
+  "code_switching": {
+   "calls": 8,
+   "clean": 0
+  },
+  "crosstalk": {
+   "calls": 13,
+   "clean": 1
+  },
+  "digits_double": {
+   "calls": 3,
+   "clean": 0
+  },
+  "digits_filler": {
+   "calls": 4,
+   "clean": 0
+  },
+  "digits_mixed": {
+   "calls": 6,
+   "clean": 0
+  },
+  "digits_pairs": {
+   "calls": 9,
+   "clean": 0
+  },
+  "digits_single": {
+   "calls": 5,
+   "clean": 1
+  },
+  "hold_music": {
+   "calls": 9,
+   "clean": 0
+  },
+  "ivr_prompt": {
+   "calls": 13,
+   "clean": 1
+  },
+  "spelled_name": {
+   "calls": 31,
+   "clean": 0
+  }
+ },
+ "boundary_error": {
+  "n": 387,
+  "note": "positive = the detected span starts late / ends early vs gold speech",
+  "start_short_ms": {
+   "p50": -215,
+   "p90": 24,
+   "p99": 1119,
+   "max": 2409
+  },
+  "end_short_ms": {
+   "p50": 66,
+   "p90": 304,
+   "p99": 1249,
+   "max": 2664
+  }
+ },
+ "audio_precision": 0.2420389029388431,
+ "share_of_audio_redacted": 0.7375284478307877,
+ "drop_confusion": {
+  "en_US|keep": {
+   "leak_scan": 5,
+   "keep": 10
+  },
+  "en_US|minor": {
+   "minor": 1
+  },
+  "en_US|pci": {
+   "pci": 2
+  },
+  "en_US|vulnerable": {
+   "vulnerable": 2
+  },
+  "es_ES|keep": {
+   "keep": 15
+  },
+  "es_ES|minor": {
+   "minor": 1
+  },
+  "es_ES|pci": {
+   "pci": 3
+  },
+  "es_ES|special_category": {
+   "keep": 1
+  },
+  "es_MX|keep": {
+   "keep": 10,
+   "pci": 6
+  },
+  "es_MX|minor": {
+   "keep": 1
+  },
+  "es_MX|pci": {
+   "pci": 1
+  },
+  "es_MX|special_category": {
+   "special_category": 1
+  },
+  "es_MX|vulnerable": {
+   "vulnerable": 1
+  }
+ },
+ "error_classes": {},
+ "throughput": {
+  "audio_seconds": 3493.6,
+  "wall_seconds": 1318.3,
+  "real_time_factor": 0.377,
+  "hardware": "CPU only: x86_64, 4 cores. NOT a GPU figure.",
+  "note": "audio_seconds counts call duration once; both channels are transcribed."
+ }
+}
