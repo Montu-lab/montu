@@ -119,6 +119,7 @@ def main(argv=None) -> None:
     ap.add_argument("--device", default="cpu")
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
+    a.commit = git_commit()  # stamped at start: edits made while the run proceeds must not re-stamp it
     out = Path(a.out)
     (out / "logs").mkdir(parents=True, exist_ok=True)
     variants = a.variants.split(",")
@@ -220,7 +221,7 @@ def summarise(rows, a, policy, asr_digest, audio_s, wall_s) -> dict:
     return {
         "evidence_class": "EVAL-SYNTHETIC",
         "binds_to": {
-            "generator_commit": git_commit(), "seed": a.seed, "per_variant": a.per_variant,
+            "generator_commit": a.commit, "seed": a.seed, "per_variant": a.per_variant,
             "variants": a.variants.split(","), "voices": {v: list(VOICES[v]) for v in a.variants.split(",")},
             "voice_licences": VOICE_LICENCES, "asr_model": a.asr, "asr_compute_type": a.compute_type,
             "asr_device": a.device, "pipeline_version": __version__, "policy_digest": policy.digest,
