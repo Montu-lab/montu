@@ -2,6 +2,7 @@
 Hits are logged as a category; the matched text is never logged."""
 from __future__ import annotations
 
+import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -19,4 +20,9 @@ class Lexicon:
 
 
 def load_lexicon(path: Path | None) -> Lexicon:
-    raise NotImplementedError
+    if path is None or not Path(path).exists():
+        return Lexicon.empty()
+    d = tomllib.loads(Path(path).read_text())
+    if set(d) - {"brands", "products", "names"}:
+        raise ValueError("lexicon keys must be brands, products, names")
+    return Lexicon(tuple(d.get("brands", ())), tuple(d.get("products", ())), tuple(d.get("names", ())), True)

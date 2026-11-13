@@ -40,6 +40,7 @@ class Detector(str, Enum):
     PHONE = "phone"
     EMAIL = "email"
     DOB_CUE = "dob_cue"
+    FULL_DATE = "full_date"
     REFERENCE_CUE = "reference_cue"
     ADDRESS_CUE = "address_cue"
     ACCOUNT_CUE = "account_cue"
@@ -49,6 +50,7 @@ class Detector(str, Enum):
     GREETING_SLOT = "greeting_slot"
     NAME_CUE = "name_cue"
     LOW_CONFIDENCE = "low_confidence"
+    UNTRANSCRIBED = "untranscribed"
     NER = "ner"
 
 

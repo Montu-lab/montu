@@ -76,8 +76,13 @@ def test_log_line_written_and_has_no_seeded_values(policy, dirs):
     assert rec["policy_version"] == policy.version
     for seeded in ("Zentrix", "Laura", "Ana", "612345678", "6123", "seis"):
         assert seeded not in text
-    assert not re.search(r"(?<![0-9a-f])\d{4,}(?![0-9a-f])", text.replace(rec["call_id"], "")
-                         .replace(str(rec["removals"]), "")), "digit run in log outside call_id/timings"
+    # Removal timings are typed ints (ms) and legitimately long; every other field must hold no digit run.
+    for r in rec["removals"]:
+        assert set(r) == {"category", "channel", "start_ms", "end_ms", "detector", "confidence"}
+        assert isinstance(r["start_ms"], int) and isinstance(r["end_ms"], int)
+    rest = {k: v for k, v in rec.items() if k not in ("call_id", "removals", "model_versions")}
+    assert not re.search(r"\d{4,}", json.dumps(rest))
+    assert all(re.fullmatch(r"[0-9a-f]{64}", v) for v in rec["model_versions"].values())
 
 
 def test_call_id_is_keyed(policy, dirs, tmp_path):
@@ -154,3 +159,20 @@ def test_redacted_audio_is_filled_at_entity_spans(policy, dirs):
     spec = np.abs(np.fft.rfft(seg))
     freqs = np.fft.rfftfreq(len(seg), 1 / SR)
     assert abs(freqs[np.argmax(spec)] - 1000) < 10
+
+
+def test_failure_after_partial_write_leaves_no_files(policy, dirs, monkeypatch):
+    import deid.pipeline as pl
+    real = pl.os.replace
+    calls = {"n": 0}
+
+    def flaky(a, b):
+        calls["n"] += 1
+        if calls["n"] == 2:  # the .wav is already in place; the transcript rename fails
+            raise OSError("disk full")
+        return real(a, b)
+
+    monkeypatch.setattr(pl.os, "replace", flaky)
+    log = run(policy, dirs, FakeTranscriber(AGENT, CUSTOMER))
+    assert log.decision.value == "dropped" and log.error_class == "OSError"
+    assert staged_files(dirs) == []

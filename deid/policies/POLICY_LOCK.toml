@@ -1,0 +1,4 @@
+# Written by `deid policy-lock`. One entry per policy version; entries are never rewritten.
+
+[versions."0.1.0"]
+digest = "4eb0b6f22c034ab69e901816c0b3b06dbe234c1ac6f42f15ef65a1eeeb1f5a72"
