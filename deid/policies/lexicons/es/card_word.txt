@@ -1,0 +1,9 @@
+# A card word anywhere in the call plus a digit run of 12+ digits (not a valid CLABE or IBAN) => PCI drop,
+# whether or not the run is Luhn-valid: ASR drops and merges digits, so Luhn alone under-detects.
+tarjeta
+visa
+mastercard
+american express
+amex
+debito
+credito

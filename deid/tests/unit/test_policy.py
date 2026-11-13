@@ -15,7 +15,7 @@ def copy(tmp_path):
 
 
 def test_shipped_policy_loads(policy):
-    assert policy.version == "0.1.0"
+    assert policy.version == "0.1.2"
     assert {"ES-GENERIC-es-S2", "MX-GENERIC-es-S2", "US-GENERIC-en-S2", "US-GENERIC-en-S3"} <= set(policy.profiles)
     assert len(policy.digest) == 64
 
@@ -63,7 +63,7 @@ def test_lock_tool_refuses_to_rewrite_a_version(tmp_path):
     p = d / "lexicons" / "es" / "vulnerable.txt"
     p.write_text(p.read_text() + "una frase nueva\n")
     with pytest.raises(PolicyError) as e:
-        write_lock(d, "0.1.0")
+        write_lock(d, load_policy(POLICY_DIR).version)
     assert e.value.reason == "version_exists"
 
 
@@ -71,9 +71,10 @@ def test_bumped_version_loads(tmp_path):
     d = copy(tmp_path)
     p = d / "lexicons" / "es" / "vulnerable.txt"
     p.write_text(p.read_text() + "una frase nueva\n")
-    (d / "policy.toml").write_text((d / "policy.toml").read_text().replace('"0.1.0"', '"0.1.1"'))
-    write_lock(d, "0.1.1")
-    assert load_policy(d).version == "0.1.1"
+    import re
+    (d / "policy.toml").write_text(re.sub(r'version = "[0-9.]+"', 'version = "9.9.9"', (d / "policy.toml").read_text()))
+    write_lock(d, "9.9.9")
+    assert load_policy(d).version == "9.9.9"
 
 
 def test_uncited_todo_rules_are_reported(policy):

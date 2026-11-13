@@ -4,6 +4,8 @@
 # voice_anon:    off | weak_ok | required   (required + no qualified backend => every call drops)
 # fill:          silence | tone
 # brand_lexicon: optional | required        (required + no private lexicon => batch rejected)
+# pad_*_ms:      set from measured boundary error (eval run 2026-11-13, whisper-small int8, synthetic audio):
+#                detected spans ended 300-450 ms before gold speech in most misses. Re-measure on real audio.
 
 [profiles."ES-GENERIC-es-S2"]
 jurisdiction = "ES"
@@ -13,8 +15,8 @@ strictness = "S2"
 voice_anon = "off"
 fill = "tone"
 digit_catch_all = 4
-pad_before_ms = 150
-pad_after_ms = 250
+pad_before_ms = 250
+pad_after_ms = 500
 brand_lexicon = "optional"
 
 [profiles."MX-GENERIC-es-S2"]
@@ -25,8 +27,8 @@ strictness = "S2"
 voice_anon = "off"
 fill = "tone"
 digit_catch_all = 4
-pad_before_ms = 150
-pad_after_ms = 250
+pad_before_ms = 250
+pad_after_ms = 500
 brand_lexicon = "optional"
 
 [profiles."US-GENERIC-en-S2"]
@@ -37,8 +39,8 @@ strictness = "S2"
 voice_anon = "off"
 fill = "tone"
 digit_catch_all = 4
-pad_before_ms = 150
-pad_after_ms = 250
+pad_before_ms = 250
+pad_after_ms = 500
 brand_lexicon = "optional"
 
 # Illinois-exposed US calls: a voiceprint is a biometric identifier (BIPA). Until a voice
@@ -51,8 +53,8 @@ strictness = "S3"
 voice_anon = "required"
 fill = "tone"
 digit_catch_all = 4
-pad_before_ms = 200
-pad_after_ms = 300
+pad_before_ms = 300
+pad_after_ms = 600
 brand_lexicon = "optional"
 
 [profiles."US-GENERIC-es+en-S2"]
@@ -63,6 +65,6 @@ strictness = "S2"
 voice_anon = "off"
 fill = "tone"
 digit_catch_all = 4
-pad_before_ms = 150
-pad_after_ms = 250
+pad_before_ms = 250
+pad_after_ms = 500
 brand_lexicon = "optional"

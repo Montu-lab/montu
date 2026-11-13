@@ -3,4 +3,4 @@
 #   deid policy-lock --version X.Y.Z
 # The lock tool refuses to rewrite an existing version's entry.
 policy_set = "montu-deid"
-version = "0.1.0"
+version = "0.1.2"

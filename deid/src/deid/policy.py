@@ -15,7 +15,7 @@ SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
 # The brief drops these by default. A profile whose jurisdiction lacks an active rule for any of them is refused,
 # so a missing rule cannot silently mean "keep".
 REQUIRED_TRIGGERS = frozenset(TRIGGER_TO_REASON)
-LEXICON_TRIGGERS = ("special_category", "minor", "vulnerable", "pci_cue")
+LEXICON_TRIGGERS = ("special_category", "minor", "vulnerable", "pci_cue", "card_word")
 
 
 class PolicyError(Exception):

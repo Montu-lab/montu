@@ -52,6 +52,7 @@ class Detector(str, Enum):
     LOW_CONFIDENCE = "low_confidence"
     UNTRANSCRIBED = "untranscribed"
     NER = "ner"
+    CAPITALISED = "capitalised"
 
 
 class DropReason(str, Enum):

@@ -29,7 +29,7 @@ class DetectConfig:
 # ---- language resources (detection cues; what to DROP lives in policies/) ----
 CUES = {
     "es": {
-        "brand": ["bienvenido a", "bienvenida a", "bienvenidos a", "gracias por llamar a", "ha llamado a",
+        "brand": ["bienvenido a", "bienvenida a", "bienvenidos a", "gracias por llamar a", "gracias por llamar", "ha llamado a",
                   "ha contactado con", "le llamo de", "le llamamos de", "llamo de parte de", "le atendemos desde",
                   "servicio de atencion al cliente de", "atencion al cliente de"],
         "name": ["le atiende", "le habla", "mi nombre es", "me llamo", "a nombre de", "habla con", "soy", "con quien hablo",
@@ -63,6 +63,7 @@ CUES = {
         "months": {"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre",
                    "setiembre", "octubre", "noviembre", "diciembre"},
         "date_glue": {"de", "del", "el", "primero"},
+        "closing": ["gracias por llamar", "gracias por su llamada", "gracias", "hasta luego", "que tenga"],
     },
     "en": {
         "brand": ["thank you for calling", "thanks for calling", "welcome to", "you've reached", "youve reached",
@@ -98,8 +99,12 @@ CUES = {
                    "october", "november", "december", "jan", "feb", "mar", "apr", "jun", "jul", "aug", "sep",
                    "sept", "oct", "nov", "dec"},
         "date_glue": {"of", "the", "st", "nd", "rd", "th"},
+        "closing": ["thank you for calling", "thank you", "thanks", "have a"],
     },
 }
+BRAND_STOP = {"le", "mi", "my", "how", "en", "i", "you", "we", "can", "que", "como", "puedo", "may", "what",
+              "le", "habla", "atiende", "is", "es", "soy", "this", "speaking"}
+BRAND_SKIP_LEAD = {"a", "al", "to", "the"}
 TLDS = {"com", "es", "mx", "net", "org", "co", "edu", "gov", "io", "info", "br", "ar", "us", "uk", "fr", "de",
         "it", "pt", "biz", "me", "eu", "cat", "gob"}
 PHONE_LENGTHS = {9, 10, 11, 12, 13}
@@ -279,6 +284,37 @@ def _email(ctx: _Ctx) -> None:
         ctx.add(Category.EMAIL, s, end, Detector.EMAIL, 0.95)
 
 
+_TLD_END = re.compile(r"\.(" + "|".join(sorted(TLDS)) + r")[.,;:!?]*$", re.I)
+
+
+def _email_glued(ctx: _Ctx) -> None:
+    """ASR output glues spoken emails: "rodrigoarrobalimei .com", "www .x .yarrobaz .com"."""
+    at_words = ctx.R["email_at"] | {"at", "arroba"}
+    for j, w in enumerate(ctx.words):
+        if ctx.ph[j] or not _TLD_END.search(w.text.strip()):
+            continue
+        s, found = j, False
+        k = j - 1
+        while k >= 0 and j - k <= 4 and not ctx.ph[k]:
+            t = ctx.toks[k]
+            if "arroba" in t or "@" in t or t in at_words or t.startswith("www"):
+                s, found = k, True
+                if t in at_words and k - 1 >= 0 and not ctx.ph[k - 1]:
+                    s = k - 1
+                break
+            if t in ctx.R["stop"] and t not in at_words:
+                break
+            k -= 1
+        if found:
+            # glue continues to the left: ".drivo", "www"
+            while s - 1 >= 0 and not ctx.ph[s - 1] and (ctx.words[s].text.startswith(".") or
+                                                        ctx.toks[s - 1].startswith("www")):
+                s -= 1
+        else:
+            s = max(0, j - 1) if j - 1 >= 0 and not ctx.ph[j - 1] else j
+        ctx.add(Category.EMAIL, s, j, Detector.EMAIL, 0.85)
+
+
 # ---- lexicon (BPO-held) ----
 def _lexicon(ctx: _Ctx, lex: Lexicon) -> None:
     for items, cat in ((lex.brands, Category.BRAND), (lex.products, Category.BRAND), (lex.names, Category.NAME)):
@@ -309,11 +345,27 @@ def _slot(ctx: _Ctx, after: int, max_words: int) -> tuple[int, int] | None:
     return s, e
 
 
+def _brand_slot(ctx: _Ctx, after: int, max_words: int = 4) -> tuple[int, int] | None:
+    """Brand after a greeting cue. Clause ends are ignored: the ASR often breaks a mis-heard brand into a new
+    sentence ("thank you for calling. Alright, more often."), and the mis-heard words are the brand's audio."""
+    n = len(ctx.toks)
+    s = after + 1
+    while s < n and ctx.toks[s] in BRAND_SKIP_LEAD and not ctx.ph[s]:
+        s += 1
+    if s >= n or ctx.ph[s] or ctx.toks[s] in BRAND_STOP or not ctx.toks[s]:
+        return None
+    e = s
+    while e + 1 < n and e - s + 1 < max_words and not ctx.ph[e + 1] and ctx.toks[e + 1] not in BRAND_STOP \
+            and ctx.toks[e + 1]:
+        e += 1
+    return s, e
+
+
 def _cue_slots(ctx: _Ctx) -> None:
     R = ctx.R
     if ctx.channel == Channel.AGENT:
         for _, ce in ctx.cue_hits(R["brand"]):
-            sl = _slot(ctx, ce, 4)
+            sl = _brand_slot(ctx, ce)
             if sl:
                 ctx.add(Category.BRAND, sl[0], sl[1], Detector.GREETING_SLOT, 0.85)
     weak = {tuple(phrase_tokens(p)) for p in R["name_weak"]}
@@ -356,6 +408,8 @@ def _dates(ctx: _Ctx) -> None:
             e += 1
         while e > s and ctx.toks[e] in ctx.R["date_glue"]:
             e -= 1
+        if s - 1 >= 0 and not ctx.ph[s - 1] and ctx.toks[s - 1] in ctx.R["date_glue"]:
+            s -= 1  # "el doce de marzo": the article is spoken inside the date's audio
         ctx.add(Category.DOB, s, e, Detector.DOB_CUE, 0.9)
         used.update(range(s, e + 1))
     # a full date (number + month + 4-digit year) without a cue
@@ -372,9 +426,7 @@ def _dates(ctx: _Ctx) -> None:
                     any(r.start < i - s for r in span_runs):
                 while e > i and ctx.toks[e] in ctx.R["date_glue"]:
                     e -= 1
-                while s < i and ctx.toks[s] in ctx.R["date_glue"]:
-                    s += 1
-                ctx.add(Category.DOB, s, e, Detector.FULL_DATE, 0.8)
+                ctx.add(Category.DOB, s, e, Detector.FULL_DATE, 0.8)  # a leading "el"/"the" stays: it is in the audio
 
 
 # ---- addresses ----
@@ -382,7 +434,13 @@ def _addresses(ctx: _Ctx) -> None:
     R, n = ctx.R, len(ctx.toks)
     toks = [w.text if not is_placeholder(w.text) else "|" for w in ctx.words]
     num_idx = {k for r in find_number_runs(toks, ctx.lang) for k in range(r.start, r.end + 1)}
-    for cs, ce in ctx.cue_hits(R["address"]):
+    hits = ctx.cue_hits(R["address"])
+    sing = [t[:-2] if t.endswith("es") and len(t) > 4 else t[:-1] if t.endswith("s") and len(t) > 3 else t
+            for t in ctx.toks]
+    for p in R["address"]:
+        pt = phrase_tokens(p)
+        hits += [(i, i + len(pt) - 1) for i in find_phrase(sing, pt) if (i, i + len(pt) - 1) not in hits]
+    for cs, ce in hits:
         s, e = cs, ce
         j = ce + 1
         content = 0
@@ -392,9 +450,7 @@ def _addresses(ctx: _Ctx) -> None:
                 break
             e = j
             content += 1
-            if ends_clause(ctx.words[j].text):
-                break
-            j += 1
+            j += 1  # commas occur inside addresses ("Durango, número 4"): only stop words end one
         # trailing glue words are not part of the address
         while e > ce and ctx.toks[e] in R["address_keep"] and e not in num_idx:
             e -= 1
@@ -456,6 +512,72 @@ def _spelled(ctx: _Ctx) -> None:
         ctx.add(Category.SPELLED, r.start, r.end, Detector.SPELLED_RUN, 0.85)
 
 
+_CAP_EXCLUDE = {"i", "im", "ill", "ive", "id", "ok", "okay", "mr", "mrs", "ms", "dr", "sr", "sra", "don", "dona",
+                "usted", "ustedes"}
+
+
+def _capitalised(ctx: _Ctx) -> None:
+    """A capitalised word mid-sentence is treated as a proper noun (NAME). Whisper capitalises proper nouns, so
+    this catches vocatives with no cue ("Muy bien, Pablo,") and mis-heard names ("Ugo"). Independent of any
+    name list: on synthetic data a gazetteer drawn from the same common-name lists would inflate recall."""
+    covered = {k for e in ctx.out for k in range(e.word_start, e.word_end + 1)}
+    months = ctx.R["months"]
+    for i, w in enumerate(ctx.words):
+        if i == 0 or i in covered or ctx.ph[i] or ctx.ph[i - 1]:
+            continue
+        txt = w.text.strip("¿¡\"'(")
+        if not txt[:1].isupper() or not txt[:1].isalpha():
+            continue
+        prev = ctx.words[i - 1].text.strip()
+        if re.search(r"[.?!:]$", prev):
+            continue
+        t = ctx.toks[i]
+        if t in _CAP_EXCLUDE or t in months or len(t) < 2 or (txt.rstrip(',;').isupper() and len(t) <= 4):
+            continue
+        ctx.add(Category.NAME, i, i, Detector.CAPITALISED, 0.6)
+
+
+def _pre_closing_vocative(ctx: _Ctx) -> None:
+    """"¡Muy bien! Sergio, gracias por llamar": the ASR's sentence break defeats the capitalisation rule, so a
+    capitalised word right before a closing formula is taken as a name."""
+    for cs, _ in ctx.cue_hits(ctx.R["closing"]):
+        i = cs - 1
+        if i < 0 or ctx.ph[i]:
+            continue
+        txt = ctx.words[i].text.strip("¿¡\"'(),.!?;:")
+        if txt[:1].isupper() and ctx.toks[i] not in _CAP_EXCLUDE and ctx.toks[i] not in ctx.R["stop"] \
+                and len(ctx.toks[i]) >= 2:
+            ctx.add(Category.NAME, i, i, Detector.CAPITALISED, 0.6)
+
+
+_DIGIT_CATS = {Category.NUMBER, Category.PHONE, Category.ACCOUNT, Category.CARD, Category.NATIONAL_ID,
+               Category.REFERENCE, Category.IBAN}
+
+
+def _absorb_fragments(ctx: _Ctx, max_gap: int = 2) -> None:
+    """A digit entity absorbs number runs within `max_gap` tokens: "228 de [NUMBER]" leaves no fragment."""
+    toks = [w.text if not is_placeholder(w.text) else "|" for w in ctx.words]
+    runs = find_number_runs(toks, ctx.lang)
+    changed = True
+    while changed:
+        changed = False
+        new = []
+        for e in ctx.out:
+            if e.category in _DIGIT_CATS:
+                s, t = e.word_start, e.word_end
+                for r in runs:
+                    if 0 < s - r.end <= max_gap + 1 and not any(ctx.ph[k] for k in range(r.start, s)):
+                        s = r.start
+                    if 0 < r.start - t <= max_gap + 1 and not any(ctx.ph[k] for k in range(t + 1, r.end + 1)):
+                        t = r.end
+                if (s, t) != (e.word_start, e.word_end):
+                    e = Entity(e.category, e.channel, s, t, ctx.words[s].start_ms, ctx.words[t].end_ms, e.detector,
+                               e.confidence)
+                    changed = True
+            new.append(e)
+        ctx.out = new
+
+
 # ---- confidence ----
 def _widen(ctx: _Ctx, ents: list[Entity], cfg: DetectConfig) -> list[Entity]:
     out = []
@@ -501,12 +623,16 @@ def detect_channel(words: list[Word], lang: str, channel: Channel, lexicon: Lexi
     _number_entities(ctx, cfg)
     _token_entities(ctx, cfg)
     _email(ctx)
+    _email_glued(ctx)
     _lexicon(ctx, lexicon)
     _cue_slots(ctx)
     _dates(ctx)
     _addresses(ctx)
     _references(ctx)
     _spelled(ctx)
+    _absorb_fragments(ctx)
+    _pre_closing_vocative(ctx)
+    _capitalised(ctx)
     ents = _widen(ctx, ctx.out, cfg)
     ctx.out = ents
     _unclear(ctx, ents, cfg)

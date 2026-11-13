@@ -2,3 +2,9 @@
 
 [versions."0.1.0"]
 digest = "4eb0b6f22c034ab69e901816c0b3b06dbe234c1ac6f42f15ef65a1eeeb1f5a72"
+
+[versions."0.1.1"]
+digest = "aa17e772428e881ff7c3267a18ab4a742dbcc645628a1a0334b4b96f16af0b92"
+
+[versions."0.1.2"]
+digest = "443a8299bc1fa0485feff4889bf313f405749320df17f2916972e514261332aa"

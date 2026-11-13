@@ -40,6 +40,23 @@ def _pci(words: list[Word], toks: list[str], entities: list[Entity], cues) -> bo
     return False
 
 
+CARD_RUN_MIN = 12
+
+
+def _card_word_and_long_run(all_words: dict, cards) -> bool:
+    """Fail-closed PCI rule: a card word anywhere in the call and any 12+ digit run that is not a valid CLABE."""
+    from .detect.checksums import clabe_valid
+    if not any(_has_phrase(_toks(ws), cards) for ws in all_words.values()):
+        return False
+    for ws in all_words.values():
+        raw = [w.text if not is_placeholder(w.text) else "|" for w in ws]
+        for lang in ("es", "en"):
+            for r in find_number_runs(raw, lang):
+                if len(r.digits) >= CARD_RUN_MIN and not (len(r.digits) == 18 and clabe_valid(r.digits)):
+                    return True
+    return False
+
+
 def _minor_age(raw: list[str], toks: list[str], lang: str) -> bool:
     for r in find_number_runs(raw, lang):
         try:
@@ -74,6 +91,9 @@ def classify_call(words: dict[Channel, list[Word]], entities: list[Entity], prof
                 fired.add("minor")
             if _has_phrase(toks, lex.get("vulnerable", ())):
                 fired.add("vulnerable")
+    for lg in langs:
+        if _card_word_and_long_run(words, profile.lexicons.get(lg, {}).get("card_word", ())):
+            fired.add("pci")
     rules = [r for r in profile.rules if r.trigger in fired]
     reasons = []
     for r in rules:
