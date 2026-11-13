@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import os
 import re
 import tomllib
 from dataclasses import dataclass, field
@@ -69,7 +70,8 @@ class PolicySet:
         return self.profiles[code]
 
 
-DEFAULT_POLICY_DIR = Path(__file__).resolve().parents[2] / "policies"
+# The policy set lives next to the source tree in a checkout; the container sets DEID_POLICY_DIR=/opt/deid/policies.
+DEFAULT_POLICY_DIR = Path(os.environ.get("DEID_POLICY_DIR") or Path(__file__).resolve().parents[2] / "policies")
 
 
 def policy_digest(policy_dir: Path) -> str:

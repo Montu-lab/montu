@@ -105,3 +105,32 @@ def test_short_number_fragment_next_to_a_long_run_is_absorbed():
 def test_address_capitalised_street_name_es():
     es = ents("Vivo en Paseo de Gracia 30, si", "es")
     assert covers(es, Category.ADDRESS, 2, 5)
+
+
+def test_misspelled_long_special_category_term_drops(policy):
+    cust = mkwords("es que estoy con quimiotrapia y no puedo ir")
+    words = {Channel.AGENT: mkwords("dígame", Channel.AGENT), Channel.CUSTOMER: cust}
+    d = classify_call(words, [], policy.profile("ES-GENERIC-es-S2"), "es")
+    assert d.drop and DropReason.SPECIAL_CATEGORY in d.reasons
+
+
+def test_short_terms_are_not_fuzzy_cancel_is_not_cancer(policy):
+    cust = mkwords("I want to cancel my contract")
+    words = {Channel.AGENT: mkwords("how can I help", Channel.AGENT), Channel.CUSTOMER: cust}
+    d = classify_call(words, [], policy.profile("US-GENERIC-en-S2"), "en")
+    assert DropReason.SPECIAL_CATEGORY not in d.reasons
+
+
+def test_dot_prefixed_fragments_join_the_email():
+    es = ents("nací en mayo .esgubo .medina juanarrobagmail .com es", "es")
+    assert covers(es, Category.EMAIL, 3, 6)
+
+
+def test_alnum_fragment_next_to_number_is_absorbed():
+    es = ents("es el 1 2 3 4 5 6 7 8 -34F vale", "es")
+    assert any(x.word_start <= 2 and x.word_end >= 10 for x in es)
+
+
+def test_code_token_with_letters_and_digits():
+    assert any(x.word_start == 2 for x in ents("es el B12X vale", "es"))
+    assert not ents("tengo fibra con 5G en casa", "es")

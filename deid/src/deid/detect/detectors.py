@@ -251,9 +251,10 @@ def _token_entities(ctx: _Ctx, cfg: DetectConfig) -> None:
             ctx.add(Category.NATIONAL_ID, i, i, Detector.CURP, 0.95)
         elif rfc_shape_valid(raw):
             ctx.add(Category.NATIONAL_ID, i, i, Detector.RFC, 0.9)
-        elif digits >= cfg.digit_catch_all or (digits >= 1 and len(raw) >= 5):
-            ctx.add(Category.REFERENCE if digits < cfg.digit_catch_all else Category.NUMBER, i, i,
-                    Detector.CATCH_ALL_DIGITS, 0.8)
+        elif digits >= cfg.digit_catch_all:
+            ctx.add(Category.NUMBER, i, i, Detector.CATCH_ALL_DIGITS, 0.8)
+        elif (digits >= 2 and digits < len(raw)) or (digits >= 1 and len(raw) >= 5):
+            ctx.add(Category.REFERENCE, i, i, Detector.CATCH_ALL_DIGITS, 0.8)  # codes: "B12X", "34F"
 
 
 # ---- spoken email ----
@@ -306,8 +307,9 @@ def _email_glued(ctx: _Ctx) -> None:
                 break
             k -= 1
         if found:
-            # glue continues to the left: ".drivo", "www"
+            # glue continues to the left: ".drivo", "www", ".esgubo .medina"
             while s - 1 >= 0 and not ctx.ph[s - 1] and (ctx.words[s].text.startswith(".") or
+                                                        ctx.words[s - 1].text.startswith(".") or
                                                         ctx.toks[s - 1].startswith("www")):
                 s -= 1
         else:
@@ -557,7 +559,10 @@ _DIGIT_CATS = {Category.NUMBER, Category.PHONE, Category.ACCOUNT, Category.CARD,
 def _absorb_fragments(ctx: _Ctx, max_gap: int = 2) -> None:
     """A digit entity absorbs number runs within `max_gap` tokens: "228 de [NUMBER]" leaves no fragment."""
     toks = [w.text if not is_placeholder(w.text) else "|" for w in ctx.words]
-    runs = find_number_runs(toks, ctx.lang)
+    runs = list(find_number_runs(toks, ctx.lang))
+    # single tokens carrying a digit ("-34F") are fragments too
+    runs += [NumberRun("x", i, i) for i, w in enumerate(ctx.words)
+             if not ctx.ph[i] and re.search(r"\d", w.text) and not re.fullmatch(r"[\d\-.,]+", w.text.strip(" ,.;"))]
     changed = True
     while changed:
         changed = False

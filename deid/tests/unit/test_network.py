@@ -16,7 +16,8 @@ FORBIDDEN = {"requests", "urllib", "urllib3", "http.client", "httpx", "aiohttp",
 # Modules allowed to import socket/http.server, and why.
 ALLOWED = {
     "netguard.py": {"socket"},          # the guard itself
-    "review_app.py": {"http.server"},   # binds 127.0.0.1 for the BPO reviewer; never connects out
+    "review_app.py": {"http.server",    # binds 127.0.0.1 for the BPO reviewer; never connects out
+                      "urllib.parse"},  # string parsing of the request path/form; no I/O
 }
 
 

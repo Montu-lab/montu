@@ -21,8 +21,32 @@ def _toks(words: list[Word]) -> list[str]:
     return [norm(w.text) if not is_placeholder(w.text) else "|" for w in words]
 
 
+def _lev(a: str, b: str, cap: int) -> int:
+    if abs(len(a) - len(b)) > cap:
+        return cap + 1
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i]
+        for j, cb in enumerate(b, 1):
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
+        prev = cur
+    return prev[-1]
+
+
+FUZZY_MIN_LEN = 8  # below this, edit distance confuses ordinary words ("cancel" / "cancer")
+
+
 def _has_phrase(toks: list[str], phrases) -> bool:
-    return any(find_phrase(toks, phrase_tokens(p)) for p in phrases)
+    """Exact phrase match; single long terms also match ASR misspellings (edit distance 1, or 2 from 12 letters)."""
+    for p in phrases:
+        pt = phrase_tokens(p)
+        if find_phrase(toks, pt):
+            return True
+        if len(pt) == 1 and len(pt[0]) >= FUZZY_MIN_LEN:
+            cap = 2 if len(pt[0]) >= 12 else 1
+            if any(len(t) >= FUZZY_MIN_LEN - 1 and _lev(t, pt[0], cap) <= cap for t in toks):
+                return True
+    return False
 
 
 def _pci(words: list[Word], toks: list[str], entities: list[Entity], cues) -> bool:

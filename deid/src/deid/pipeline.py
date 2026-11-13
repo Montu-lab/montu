@@ -207,3 +207,17 @@ def process_call(call: CallAudio, profile: Profile, policy: PolicySet, deps: Dep
     with open(dirs.log_file, "a") as f:
         f.write(log.to_json() + "\n")
     return log
+
+
+def log_drop(source_bytes: bytes, profile: Profile, policy: PolicySet, deps: Deps, dirs: OutputDirs,
+             reason: DropReason) -> CallLog:
+    """A call that never reached process_call (e.g. undecodable): one log record, keyed hash only."""
+    b = CallLogBuilder(call_id=call_id(deps.hmac_key, source_bytes), profile_code=profile.code,
+                       policy_version=policy.version, pipeline_version=__version__,
+                       model_versions={ModelSlot.ASR: deps.transcriber.model_digest})
+    b.drop(reason)
+    log = b.build()
+    dirs.logs.mkdir(parents=True, exist_ok=True)
+    with open(dirs.log_file, "a") as f:
+        f.write(log.to_json() + "\n")
+    return log

@@ -1,0 +1,6 @@
+.venv
+eval-out
+**/__pycache__
+models/**/.cache
+tests
+models/tts
