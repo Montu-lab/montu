@@ -1,0 +1,45 @@
+# Mexico: LFPDPPP (new law published 2025). Article numbers for sensitive data and
+# minors are not known reliably from memory: TODO with citation gaps, not invented.
+jurisdiction = "MX"
+
+[[rules]]
+id = "MX-PCI-1"
+trigger = "pci"
+action = "drop"
+citation = "PCI DSS v4.0 Requirement 3.3.1: sensitive authentication data is not retained after authorisation"
+verified = false
+
+[[rules]]
+id = "MX-VULN-1"
+trigger = "vulnerable"
+action = "drop"
+citation = "Montu policy (brief, 2026-11-13): vulnerable customers dropped by default. Not a legal citation."
+verified = true
+
+[[rules]]
+id = "MX-BRIEF-SENSITIVE"
+trigger = "special_category"
+action = "drop"
+citation = "Montu policy (brief, 2026-11-13): special categories dropped by default. Legal basis in LFPDPPP 2025 not yet cited."
+verified = true
+
+[[rules]]
+id = "MX-BRIEF-MINOR"
+trigger = "minor"
+action = "drop"
+citation = "Montu policy (brief, 2026-11-13): minors dropped by default. Legal basis in LFPDPPP 2025 not yet cited."
+verified = true
+
+[[rules]]
+id = "MX-LFPDPPP-SENSITIVE"
+trigger = "special_category"
+action = "drop"
+status = "todo"
+citation_gap = "LFPDPPP 2025: article defining datos personales sensibles; not cited"
+
+[[rules]]
+id = "MX-LFPDPPP-MINOR"
+trigger = "minor"
+action = "drop"
+status = "todo"
+citation_gap = "LFPDPPP 2025: provisions on minors' data; not cited"

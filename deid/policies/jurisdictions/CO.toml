@@ -1,0 +1,36 @@
+jurisdiction = "CO"
+
+[[rules]]
+id = "CO-PCI-1"
+trigger = "pci"
+action = "drop"
+citation = "PCI DSS v4.0 Requirement 3.3.1: sensitive authentication data is not retained after authorisation"
+verified = false
+
+[[rules]]
+id = "CO-SENS-1"
+trigger = "special_category"
+action = "drop"
+citation = "Ley 1581 de 2012 Art. 5: datos sensibles"
+verified = false
+
+[[rules]]
+id = "CO-MINOR-1"
+trigger = "minor"
+action = "drop"
+citation = "Ley 1581 de 2012 Art. 7: derechos de los niños, niñas y adolescentes"
+verified = false
+
+[[rules]]
+id = "CO-VULN-1"
+trigger = "vulnerable"
+action = "drop"
+citation = "Montu policy (brief, 2026-11-13): vulnerable customers dropped by default. Not a legal citation."
+verified = true
+
+[[rules]]
+id = "CO-DEC1377"
+trigger = "special_category"
+action = "drop"
+status = "todo"
+citation_gap = "Decreto 1377 de 2013 specifics not encoded"

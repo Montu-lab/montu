@@ -1,0 +1,38 @@
+# Spain: GDPR + LOPDGDD. Citations entered from memory; verified = false until a
+# separate review checks each against the text. None may be quoted externally before that.
+jurisdiction = "ES"
+
+[[rules]]
+id = "ES-PCI-1"
+trigger = "pci"
+action = "drop"
+citation = "PCI DSS v4.0 Requirement 3.3.1: sensitive authentication data is not retained after authorisation"
+verified = false
+
+[[rules]]
+id = "ES-ART9-1"
+trigger = "special_category"
+action = "drop"
+citation = "GDPR (EU) 2016/679 Art. 9(1): special categories of personal data"
+verified = false
+
+[[rules]]
+id = "ES-MINOR-1"
+trigger = "minor"
+action = "drop"
+citation = "LOPDGDD (LO 3/2018) Art. 7: consent of minors, age 14; GDPR Art. 8"
+verified = false
+
+[[rules]]
+id = "ES-VULN-1"
+trigger = "vulnerable"
+action = "drop"
+citation = "Montu policy (brief, 2026-11-13): vulnerable customers dropped by default. Not a legal citation."
+verified = true
+
+[[rules]]
+id = "ES-LOPDGDD-ART9"
+trigger = "special_category"
+action = "drop"
+status = "todo"
+citation_gap = "LOPDGDD Art. 9 restricts consent as a lifting condition for some special categories; scope relative to GDPR Art. 9 not encoded"

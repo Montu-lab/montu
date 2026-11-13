@@ -1,0 +1,6 @@
+# The policy set. Every log line records `version`. Any change to any file under
+# policies/ (except POLICY_LOCK.toml) requires a new version and a new lock entry:
+#   deid policy-lock --version X.Y.Z
+# The lock tool refuses to rewrite an existing version's entry.
+policy_set = "montu-deid"
+version = "0.1.0"

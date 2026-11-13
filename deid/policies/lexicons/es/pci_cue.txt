@@ -1,0 +1,11 @@
+# Cue + a digit run within the window => PCI drop. A Luhn-valid run alone => PCI drop.
+codigo de seguridad
+cvv
+cvc
+caducidad
+fecha de vencimiento
+vencimiento
+numero de la tarjeta
+numero de tarjeta
+los tres digitos
+pin

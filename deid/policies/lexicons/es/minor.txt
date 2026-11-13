@@ -1,0 +1,9 @@
+# A cue alone triggers. Ages under 18 are also detected by rule ("tiene N anos", "de N anos").
+mi hijo
+mi hija
+mis hijos
+el nino
+la nina
+menor de edad
+colegio
+mi bebe

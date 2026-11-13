@@ -1,0 +1,68 @@
+# Profile code: <JURISDICTION>-<SECTOR>-<language[+language]>-<STRICTNESS>
+# The batch metadata carries a profile code and nothing that identifies a client.
+#
+# voice_anon:    off | weak_ok | required   (required + no qualified backend => every call drops)
+# fill:          silence | tone
+# brand_lexicon: optional | required        (required + no private lexicon => batch rejected)
+
+[profiles."ES-GENERIC-es-S2"]
+jurisdiction = "ES"
+sector = "generic"
+languages = ["es"]
+strictness = "S2"
+voice_anon = "off"
+fill = "tone"
+digit_catch_all = 4
+pad_before_ms = 150
+pad_after_ms = 250
+brand_lexicon = "optional"
+
+[profiles."MX-GENERIC-es-S2"]
+jurisdiction = "MX"
+sector = "generic"
+languages = ["es"]
+strictness = "S2"
+voice_anon = "off"
+fill = "tone"
+digit_catch_all = 4
+pad_before_ms = 150
+pad_after_ms = 250
+brand_lexicon = "optional"
+
+[profiles."US-GENERIC-en-S2"]
+jurisdiction = "US"
+sector = "generic"
+languages = ["en"]
+strictness = "S2"
+voice_anon = "off"
+fill = "tone"
+digit_catch_all = 4
+pad_before_ms = 150
+pad_after_ms = 250
+brand_lexicon = "optional"
+
+# Illinois-exposed US calls: a voiceprint is a biometric identifier (BIPA). Until a voice
+# anonymisation backend has a recorded evaluation, every call under this profile drops.
+[profiles."US-GENERIC-en-S3"]
+jurisdiction = "US"
+sector = "generic"
+languages = ["en"]
+strictness = "S3"
+voice_anon = "required"
+fill = "tone"
+digit_catch_all = 4
+pad_before_ms = 200
+pad_after_ms = 300
+brand_lexicon = "optional"
+
+[profiles."US-GENERIC-es+en-S2"]
+jurisdiction = "US"
+sector = "generic"
+languages = ["es", "en"]
+strictness = "S2"
+voice_anon = "off"
+fill = "tone"
+digit_catch_all = 4
+pad_before_ms = 150
+pad_after_ms = 250
+brand_lexicon = "optional"

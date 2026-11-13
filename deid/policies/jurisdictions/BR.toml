@@ -1,0 +1,36 @@
+jurisdiction = "BR"
+
+[[rules]]
+id = "BR-PCI-1"
+trigger = "pci"
+action = "drop"
+citation = "PCI DSS v4.0 Requirement 3.3.1: sensitive authentication data is not retained after authorisation"
+verified = false
+
+[[rules]]
+id = "BR-SENS-1"
+trigger = "special_category"
+action = "drop"
+citation = "LGPD (Lei 13.709/2018) Art. 5 II: dado pessoal sensível; Art. 11"
+verified = false
+
+[[rules]]
+id = "BR-MINOR-1"
+trigger = "minor"
+action = "drop"
+citation = "LGPD (Lei 13.709/2018) Art. 14: dados pessoais de crianças e adolescentes"
+verified = false
+
+[[rules]]
+id = "BR-VULN-1"
+trigger = "vulnerable"
+action = "drop"
+citation = "Montu policy (brief, 2026-11-13): vulnerable customers dropped by default. Not a legal citation."
+verified = true
+
+[[rules]]
+id = "BR-ANPD-ANON"
+trigger = "special_category"
+action = "drop"
+status = "todo"
+citation_gap = "ANPD guidance on anonymisation (reasonable means under LGPD Art. 12) not encoded"

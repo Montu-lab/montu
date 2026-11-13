@@ -1,0 +1,63 @@
+# Phrases matched accent- and case-insensitively on whole-word boundaries across both channels.
+# Recall-first: these over-drop. Measured on the gold set; precision reported, not gated.
+# health
+cancer
+quimioterapia
+diabetes
+diabetico
+diabetica
+embarazada
+embarazo
+vih
+sida
+depresion
+ansiedad
+psiquiatra
+psicologo
+medicacion
+enfermedad
+hospital
+hospitalizado
+hospitalizada
+operacion
+cirugia
+discapacidad
+minusvalia
+diagnostico
+tratamiento medico
+baja medica
+# religion / beliefs
+musulman
+musulmana
+judio
+judia
+catolico
+catolica
+evangelico
+evangelica
+testigo de jehova
+mezquita
+sinagoga
+iglesia
+religion
+# sexuality
+gay
+lesbiana
+homosexual
+bisexual
+transexual
+mi novio
+mi novia
+mi pareja
+# union / politics
+sindicato
+sindicalista
+afiliado al partido
+afiliada al partido
+partido politico
+# ethnicity / origin
+gitano
+gitana
+indigena
+raza
+etnia

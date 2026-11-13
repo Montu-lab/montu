@@ -1,0 +1,49 @@
+# health
+cancer
+chemotherapy
+diabetes
+diabetic
+pregnant
+pregnancy
+hiv
+aids
+depression
+anxiety
+psychiatrist
+therapist
+medication
+illness
+hospital
+hospitalized
+surgery
+disability
+disabled
+diagnosis
+diagnosed
+medical leave
+# religion / beliefs
+muslim
+jewish
+catholic
+christian
+mosque
+synagogue
+church
+religion
+# sexuality
+gay
+lesbian
+homosexual
+bisexual
+transgender
+my boyfriend
+my girlfriend
+my partner
+# union / politics
+union member
+labor union
+trade union
+political party
+# ethnicity / origin
+ethnicity
+race

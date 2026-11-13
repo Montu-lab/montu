@@ -1,0 +1,24 @@
+[project]
+name = "deid"
+version = "0.1.0"
+description = "Offline de-identification of two-channel contact-centre recordings. Runs inside the data processor's environment; no network at run time."
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26"]
+
+[project.optional-dependencies]
+asr = ["faster-whisper>=1.0"]
+test = ["pytest>=8"]
+
+[project.scripts]
+deid = "deid.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["pipeline: needs local models and ffmpeg (PIPELINE evidence class)"]

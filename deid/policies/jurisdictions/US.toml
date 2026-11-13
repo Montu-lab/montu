@@ -1,0 +1,43 @@
+jurisdiction = "US"
+
+[[rules]]
+id = "US-PCI-1"
+trigger = "pci"
+action = "drop"
+citation = "PCI DSS v4.0 Requirement 3.3.1: sensitive authentication data is not retained after authorisation"
+verified = false
+
+[[rules]]
+id = "US-BRIEF-SENSITIVE"
+trigger = "special_category"
+action = "drop"
+citation = "Montu policy (brief, 2026-11-13): special categories dropped by default. US has no general equivalent of GDPR Art. 9."
+verified = true
+
+[[rules]]
+id = "US-BRIEF-MINOR"
+trigger = "minor"
+action = "drop"
+citation = "Montu policy (brief, 2026-11-13): minors dropped by default. COPPA applicability not analysed."
+verified = true
+
+[[rules]]
+id = "US-VULN-1"
+trigger = "vulnerable"
+action = "drop"
+citation = "Montu policy (brief, 2026-11-13): vulnerable customers dropped by default. Not a legal citation."
+verified = true
+
+[[rules]]
+id = "US-HIPAA-SH"
+trigger = "special_category"
+action = "drop"
+citation = "HIPAA Privacy Rule, 45 CFR 164.514(b)(2): safe-harbour de-identification (applies if the controller is a covered entity)"
+verified = false
+
+[[rules]]
+id = "US-STATE-BIOMETRIC"
+trigger = "special_category"
+action = "drop"
+status = "todo"
+citation_gap = "State biometric laws beyond Illinois BIPA (e.g. Texas, Washington) not analysed; BIPA handled by profile voice_anon = required"

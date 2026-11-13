@@ -1,0 +1,36 @@
+jurisdiction = "AR"
+
+[[rules]]
+id = "AR-PCI-1"
+trigger = "pci"
+action = "drop"
+citation = "PCI DSS v4.0 Requirement 3.3.1: sensitive authentication data is not retained after authorisation"
+verified = false
+
+[[rules]]
+id = "AR-SENS-1"
+trigger = "special_category"
+action = "drop"
+citation = "Ley 25.326 Art. 2 (datos sensibles) and Art. 7"
+verified = false
+
+[[rules]]
+id = "AR-VULN-1"
+trigger = "vulnerable"
+action = "drop"
+citation = "Montu policy (brief, 2026-11-13): vulnerable customers dropped by default. Not a legal citation."
+verified = true
+
+[[rules]]
+id = "AR-BRIEF-MINOR"
+trigger = "minor"
+action = "drop"
+citation = "Montu policy (brief, 2026-11-13): minors dropped by default. Legal basis in Ley 25.326 not yet cited."
+verified = true
+
+[[rules]]
+id = "AR-MINOR-CITE"
+trigger = "minor"
+action = "drop"
+status = "todo"
+citation_gap = "Ley 25.326 provisions on minors not cited"
